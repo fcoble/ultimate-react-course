@@ -1,4 +1,14 @@
 import { useState } from "react";
+//since the Logo.js file contains export 'default' (empahsis on default)
+//we could name Logo anything that we want, for example import X from './logo
+//and call the component with <X />
+import Logo from './components/Logo';
+import Form from "./components/Form";
+//This was done using refactor by selecting the code, refactor, and then new file
+//This method refactors the code into a named export, so this is an example
+// of a named export, in opposition to a 'default' export
+import { PackingList } from "./components/PackingList";
+import Stats from "./components/Stats";
 
 const initialItems = [
   {id: 1, description: "Passports", quantity: 2,  packed: false},
@@ -23,81 +33,24 @@ export default function App() {
     : item)
   );
   }
+  function handleClearItems() {
+    const confirmed = window.confirm('Are you sure that you want to delete all items?')
+    
+    if (confirmed) setItems([]);
+
+  }
 
   return <div className="app">
     <Logo />
     <Form onAddItems={handleAddItems}/>
-    <PackingList items={items} onDeleteItem=
-    {handleDeleteItem} onToggleItem={handleToggleItem}/>
-    <Stats />
+    <PackingList 
+      items={items} 
+      onDeleteItem={handleDeleteItem} 
+      onToggleItem={handleToggleItem}
+      onClearItems={handleClearItems}
+    />
+    <Stats items={items}/>
   </div>
 }
 
-function Logo() {
-  return <h1>🌴 Far Away 🧳</h1>
-}
 
-function Form({ onAddItems }) {
-  
-  const [description, setDescription] = useState("");
-  const [quantity, setQuantity] = useState(5);
-
-  function handleSubmit(e) {
-    if (!description) return;
-
-    e.preventDefault();
-
-    const newItem = {description, quantity, packed: false, id: Date.now()};
-    console.log(newItem);
-
-    onAddItems(newItem);
-
-    setDescription("");
-    setQuantity(1);
-  }
-
-  return <form className="add-form" onSubmit={handleSubmit}> 
-
-    <h3>What do you need for your 😍 trip?</h3>
-
-    <select value={quantity} onChange={(e) =>setQuantity(Number(e.target.value))}>
-      {Array.from({length: 20}, (_, i) => i + 1).
-      map(num => <option value={num} key={num}>{num}</option>)}
-    </select>
-
-    <input type='text' placeholder="Item..." value={description} onChange={(e) => 
-      { 
-        console.log(e.target.value);
-        setDescription(e.target.value);
-      }}
-    />
-    <button>Add</button>
-  </form>;
-}
-
-function PackingList({items, onDeleteItem, onToggleItem}) {
-  return (<div className="list">
-  <ul >
-    {items.map((item) => (<Item item={item} onDeleteItem={onDeleteItem} onToggleItem={onToggleItem} key={item.id}/>))}
-  </ul>
-  </div>);
-}
-
-// function Item(props) { 
-function Item({item, onDeleteItem, onToggleItem}) { //object destructuring
-  return <li>
-    <input type="checkbox" value={item.checked} onChange={() => {onToggleItem(item.id)}}/>
-    <span   style={item.packed ? {textDecoration: 'line-through'} : {}}>  
-    {item.quantity} {item.description}
-    </span>
-    <button onClick={() => onDeleteItem(item.id)}>❌</button>
-    </li>;
-}
-
-function Stats() {
-  return <footer className="stats">
-      <em>
-      You have have X items on your list, and your have packed X (X%)
-      </em>
-      </footer>;
-}
