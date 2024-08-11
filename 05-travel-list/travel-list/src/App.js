@@ -16,9 +16,12 @@ const initialItems = [
   {id: 3, description: "Charger", quantity: 1,  packed: false},
 ]
 export default function App() {
+  //items so an empty state array
   const [items, setItems] = useState([]);
 
   function handleAddItems(item) {
+    //can't mutate with our setter
+    //...spread the items across the new array and add the one more item
     setItems(((items) => [...items, item]));
   }
 

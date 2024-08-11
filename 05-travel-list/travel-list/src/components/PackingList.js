@@ -7,6 +7,7 @@ export function PackingList({ items, onDeleteItem, onToggleItem, onClearItems })
   let sortedItems;
 
   if (sortBy === "input") sortedItems = items;
+  //slice is used to just take a copy, that's what it is being used for
   if (sortBy === "description") sortedItems = items.slice().
     sort((a, b) => a.description.localeCompare(b.description));
 
